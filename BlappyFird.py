@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+import os
 
 # Initialize pygame
 pygame.init()
@@ -35,6 +36,8 @@ def resource_path(relative_path):
 # Then load the bird image like this:
 bird_img = pygame.image.load(resource_path('BlappyFird.png'))
 bird_img = pygame.transform.scale(bird_img, (bird_width, bird_height))
+message_timer = 0
+show_pass_message = False
 
 # Pipe setup (DOUBLED)
 pipe_width = 120
@@ -119,6 +122,9 @@ while True:
             if pipe.x + pipe_width < bird_x and not scored_pipes[i // 2]:
                 score += 1
                 scored_pipes[i // 2] = True
+                show_pass_message = True
+                message_timer = 60
+                
 
     # Draw everything
     draw_bird()
@@ -132,5 +138,14 @@ while True:
     if game_over:
         game_over_surface = font.render("Game Over", True, (255, 0, 0))
         screen.blit(game_over_surface, (WIDTH // 2 - 200, HEIGHT // 2 - 50))
+
+    # Display "Good Job!" message temporarily
+    if show_pass_message:
+        pass_message_surface = font.render("NICE!", True, (0, 0, 0))
+        screen.blit(pass_message_surface, (WIDTH // 2 - 150, HEIGHT // 2 - 300))
+        message_timer -= 1
+        if message_timer <= 0:
+            show_pass_message = False
+
 
     pygame.display.flip()
